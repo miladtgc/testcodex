@@ -82,3 +82,52 @@
   - کالیبراسیون میدانی در چند نقطه محله انجام بده.
   - برای هر BTS پارامتر path-loss محلی بساز.
   - فیلتر زمانی (Kalman/EMA) برای نرم کردن ping-pong بگذار.
+
+## 7) چطور Build و Run کنم؟
+
+### روش ۱: Android Studio (ساده‌ترین)
+1. Android Studio (نسخه جدید) را نصب کن.
+2. پروژه `android-offline-bts` را باز کن.
+3. از `SDK Manager` این‌ها را نصب کن:
+   - Android SDK Platform 34
+   - Android SDK Build-Tools
+   - Android SDK Platform-Tools
+4. JDK پروژه را روی **17** بگذار (Project Structure → Gradle JDK).
+5. یک emulator بساز یا گوشی واقعی وصل کن (USB debugging).
+6. Run بزن.
+
+### روش ۲: خط فرمان (CLI)
+
+#### پیش‌نیازها
+- Java 17
+- Android SDK (با `platform-tools`, `platforms;android-34`, `build-tools`)
+- متغیرهای محیطی:
+  - `ANDROID_HOME` یا `ANDROID_SDK_ROOT`
+  - `JAVA_HOME`
+
+#### دستورات
+```bash
+cd android-offline-bts
+export JAVA_HOME=/path/to/jdk17
+export ANDROID_SDK_ROOT=/path/to/Android/Sdk
+
+# برای دیدن تسک‌ها
+gradle tasks
+
+# ساخت دیباگ APK
+gradle :app:assembleDebug
+
+# نصب روی دستگاه متصل
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+```
+
+### فایل نقشه آفلاین را کجا بگذارم؟
+کد فعلی فایل را از مسیر زیر می‌خواند:
+- `context.filesDir/iran-neighborhood.map`
+
+پس باید فایل `iran-neighborhood.map` را قبل از اجرا به `filesDir` اپ کپی کنی (یا کد را طوری تغییر بدهی که از `assets/` لود کند).
+
+### اگر Build خطا داد
+- اگر خطای Java دیدی: نسخه JDK را روی 17 تنظیم کن.
+- اگر خطای Android SDK دیدی: پکیج‌های SDK API 34 را نصب کن.
+- اگر دانلود dependency مشکل داشت: VPN/Proxy یا mirror مخزن Google/Maven را بررسی کن.
